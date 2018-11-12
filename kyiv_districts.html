@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      <title>Mashups with google.maps.Data</title>
+      <style>
+  			html, body, #map {
+  			 height: 100%;
+  			 margin: 0;
+  			 padding: 0;
+  			 overflow: hidden; }
+	  </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+    	var mapStyle = [{
+          'featureType': 'all',
+          'elementType': 'all',
+          'stylers': [{'visibility': 'off'}]
+        }, {
+          'featureType': 'landscape',
+          'elementType': 'geometry',
+          'stylers': [{'visibility': 'on'}, {'color': '#fcfcfc'}]
+        }, {
+          'featureType': 'water',
+          'elementType': 'labels',
+          'stylers': [{'visibility': 'off'}]
+        }, {
+          'featureType': 'water',
+          'elementType': 'geometry',
+          'stylers': [{'visibility': 'on'}, {'hue': '#5f94ff'}, {'lightness': 60}]
+        }];
+
+    	var map 
+    	var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
+
+      function initMap() {
+        // load the map
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 50.448304,  lng: 30.562499},
+          zoom: 10,
+          styles: mapStyle
+        });
+        loadMapShapes();
+
+          var count=0;
+
+        for (count = 0; count < locations.length; count++) {
+
+        	var icon = {url:locations[count][3],
+        				scaledSize: new google.maps.Size(25,30)};
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[count][1], locations[count][2]),
+                map: map,
+                icon:icon
+                
+                });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                var marker_map = this.getMap();
+                this.info.open(marker_map, this);
+                });
+
+            marker.info = new google.maps.InfoWindow({
+                content: locations [count][0]
+                });   
+
+            infoWindow = new google.maps.InfoWindow;        
+
+            	
+		}
+       }
+
+		function loadMapShapes() {
+		  // load US state outline polygons from a GeoJSON file
+		  map.data.loadGeoJson('https://api.myjson.com/bins/12wzts', { idPropertyName: 'STATE' });
+        }
+
+        var locations = [
+        ['<h3>Шевченківський район</h3>', 50.465972, 30.463301,'markers_images/sheva.png'],
+        ['<h3>Печерський район</h3>', 50.420445, 30.557941,'markers_images/pecher.png'],
+        ['<h3>Дарницький район</h3>', 50.415646, 30.704264,'markers_images/dar.png'],
+        ['<h3>Голосіївський район</h3>', 50.305042, 30.568659,'markers_images/gol.png'],
+        ['<h3>Деснянський район</h3>', 50.523833, 30.668418,'markers_images/desn.png'],
+        ['<h3>Дніпровський район</h3>', 50.453532, 30.596602,'markers_images/dnipr.png'],
+        ['<h3>Оболонський район</h3>', 50.555774, 30.430580,'markers_images/obolon.png'],
+        ['<h3>Святошинський район</h3>', 50.468997, 30.342747,'markers_images/svat.png'],
+        ['<h3>Солом`янський район</h3>', 50.427198, 30.449213,'markers_images/solom.png'],
+        ['<h3>Подільський район</h3>', 50.494290, 30.414230,'markers_images/pod.png'],
+    ];
+    </script>
+    
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=_YOUR_API_KEY_&callback=initMap">
+    </script>
+  </body>
+</html>
